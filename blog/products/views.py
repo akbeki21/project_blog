@@ -9,7 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import *
 from .serializers import *
-# from .filters import ProductFilter
+from .filters import ProductFilter
 
 
 class MyPaginationClass(PageNumberPagination):
@@ -25,12 +25,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset  = Product.objects.all()
     pagination_class = MyPaginationClass
     filter_backends  = [DjangoFilterBackend]
-    # filterset_fields = ['categories']
-    # filter_class = ProductFilter
+    filter_class = ProductFilter
 
 
     def get_serializer_class(self):
-        if  self.action == 'list':
+        if self.action == 'list':
             return ProductListSerializer
         elif self.action == 'retrieve':
             return ProductSerializer
@@ -44,6 +43,11 @@ class ProductViewSet(viewsets.ModelViewSet):
             permissions = [permissions.IsAdminUser]
         return [permission() for permission in permissions]
 
+    
+    def get_queryset(self):
+        slug = self.request.query_params.get('category')
+        return Product.objects.filter(categories=slug)
+
 
     @action(methods=['get'], detail=False)
     def search(self, request):
@@ -51,8 +55,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         if q is not None:
             queryset = queryset.filter(Q(product_name__icontains=q))
-        serializer = ProductSerializer(queryset, many=True)
+        serializer = ProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 

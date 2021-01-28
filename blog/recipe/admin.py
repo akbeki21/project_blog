@@ -18,7 +18,7 @@ from .models import *
 
 
 class ImageInline(admin.TabularInline):
-    model = Recipe
+    model = RecipeImage
     max_num = 4
     min_num = 1
     fields = ['image']

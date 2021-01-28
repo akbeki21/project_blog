@@ -3,14 +3,6 @@ from rest_framework import serializers
 from .models import *
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = "__all__"
-
-
-
-
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -33,15 +25,14 @@ class ProductSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['image'] = self._get_image_url(instance)
         representation['categories'] = CategorySerializer(instance.categories.all(), many=True).data
-        representation['comments'] = CommentSerializer(instance.commets.all(), many=True).data
-
+        
         return representation
 
 
 class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        # exclude = ('description', )
+        fields = '__all__'
 
     
     def _get_image_url(self, obj):
@@ -60,6 +51,14 @@ class ProductListSerializer(serializers.ModelSerializer):
         representation['image'] = self._get_image_url(instance)
         representation['categories'] = CategorySerializer(instance.categories.all(), many=True).data
         return representation
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    products = ProductListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = "__all__"
 
 
 

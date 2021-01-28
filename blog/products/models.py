@@ -14,6 +14,8 @@ def gen_slug(s):
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, primary_key=True, blank=True)
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='children', null=True, blank=True)
+
 
     def __str__(self):
         return self.name
@@ -35,7 +37,7 @@ class Product(models.Model):
     fats          = models.DecimalField(max_digits=5, decimal_places=2)
     carbohydrates = models.DecimalField(max_digits=5, decimal_places=2)
     proteins      = models.DecimalField(max_digits=5, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='категория')
+    categories    = models.ManyToManyField(Category, related_name='categories')
 
     def __str__(self):
         return self. product_name
@@ -47,7 +49,7 @@ class Product(models.Model):
 
     
     class Meta:
-        ordering = ('product_name', )
+        ordering = ('calories', )
 
 
 

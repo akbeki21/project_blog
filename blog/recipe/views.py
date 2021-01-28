@@ -20,7 +20,7 @@ class MyPaginationClass(PageNumberPagination):
     page_size = 2
 
 
-class RecipeView(viewsets.ModelViewSet):
+class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -42,6 +42,14 @@ class RecipeView(viewsets.ModelViewSet):
             obj = self.get_object()
             obj.save()
         return super().retrieve(request)
+
+
+    def delete(self, request, *args, **kwargs):
+        if self.get_queryset().exists():
+            self.get_queryset().delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise ValidationError('You deleted recipe')
 
 
     # def get_queryset(self):

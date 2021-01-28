@@ -4,3 +4,6 @@ pillow==7.1
 pytils
 python-decouple
 django-filter
+psycopg2-binary==2.8.5
+drf-yasg==1.17.1
+dj-database-url==0.5.0

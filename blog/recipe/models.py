@@ -6,8 +6,10 @@ from account.models import User
 from django.contrib.auth import get_user_model
 
 
+User = get_user_model()
+
 class Recipe(models.Model):
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='recipe')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipe')
     text   = models.TextField()
     title  = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -19,7 +21,7 @@ class Recipe(models.Model):
 class Comment(models.Model):
     recipe   = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='comments')
     text       = models.TextField(max_length=400)
-    author     = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments')
+    author     = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -33,7 +35,7 @@ class RecipeImage(models.Model):
 
 
 class Like(models.Model):
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
     def __str__(self):

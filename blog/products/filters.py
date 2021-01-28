@@ -1,13 +1,13 @@
-# import django_filters
+import django_filters
 
-# from .models import Product
-
-
-# class ProductFilter(django_filters.FilterSet):
-#     price_from  = django_filters.NumberFilter(field_name='price', lookup_expr='gte')
-#     price_to    = django_filters.NumberFilter(field_name='price', lookup_expr='lte')
+from .models import Product
 
 
-#     class Meta:
-#         model  = Product
-#         fields = ('price_from', 'price_to')
+class ProductFilter(django_filters.FilterSet):
+    min_calories  = django_filters.NumberFilter(field_name='calories', lookup_expr='gte')
+    max_calories    = django_filters.NumberFilter(field_name='calories', lookup_expr='lte')
+
+
+    class Meta:
+        model  = Product
+        fields = ('min_calories', 'max_calories')
